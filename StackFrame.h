@@ -20,6 +20,10 @@ public:
     @param filename name of the file
     */
     void run(std::string filename);
+
+    AVLTree a() {
+
+    };
 };
 
 #endif // !__STACK_FRAME_H__

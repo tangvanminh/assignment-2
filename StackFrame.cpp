@@ -5,7 +5,7 @@
 #include "constants.h"
 using namespace std;
 
-enum balance_factor { LH, EH, RH };
+
 
 
 
@@ -25,6 +25,7 @@ enum error_type {
 class AVLTree {
 public:
     class Node;
+    enum balance_factor { LH, EH, RH };
 
 protected:
     Node* root;
@@ -79,13 +80,27 @@ private:
         }
     }
 
+    //a>b?
+    bool ALargerThanB(string a, string b) {
+        int i = 0, j = 0;
+        while (i < a.size() && j < b.size()) {
+            if (a[i] < b[j]) return false;
+            if (a[i] > b[j]) return true;
+            i++, j++;
+        }
+        if (i == a.size())return false;
+        return true;
+    }
+
+
     void insertNodeRec(Node*& root, Node* insertPtr, bool& taller) {
         if (root == NULL) {
             root = insertPtr;
             taller = true;
             return;
         }
-        if (root->key > insertPtr->key) {
+        //root->key > insertPtr->key
+        if (ALargerThanB(root->key, insertPtr->key)) {
             insertNodeRec(root->left, insertPtr, taller);
             //left tree is taller
             if (taller) {
@@ -154,9 +169,11 @@ public:
         this->taller = false;
         count = 0;
     }
+
     //more func
 
-    void insertNode(Node* insertPtr) {
+    void insertNode(string key, float value, int type) {
+        Node* insertPtr = new Node(key, value, type);
         insertNodeRec(this->root, insertPtr, this->taller);
         return;
     }
@@ -174,6 +191,8 @@ public:
         friend class AVLTree;
     public:
         Node() {
+            this->type = 0;
+            this->value = 0;
             this->balance = EH;
             this->left = this->right = NULL;
         }

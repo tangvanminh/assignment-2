@@ -109,7 +109,41 @@ private:
             return;
         }
         if (ALargerThanB(root->key, delKey)) {
-
+            deleteNodeRec(root->left, delKey, shorter, success);
+            if (shorter) {
+                deleteRightBalance(root, shorter);
+            }
+        }
+        else if (ALargerThanB(delKey, root->key)) {
+            deleteNodeRec(root->right, delKey, shorter, success);
+            if (shorter) {
+                deleteLeftBalance(root, shorter);
+            }
+        }
+        else {
+            Node* deletePtr = root;
+            if (root->right == NULL) {
+                root = root->left;
+                success = true;
+                shorter = true;
+                delete deletePtr;
+                return;
+            }
+            else if (root->left == NULL) {
+                root = root->right;
+                success = true;
+                shorter = true;
+                delete deletePtr;
+                return;
+            }
+            else {
+                Node* exchangePtr = root->left;
+                while (exchangePtr->right != NULL) {
+                    exchangePtr = exchangePtr->right;
+                }
+                *root = *exchangePtr;
+                deleteNodeRec(root->left, exchangePtr->key, shorter, success);
+            }
         }
         return;
     }
@@ -174,12 +208,94 @@ private:
     }
 
     void deleteLeftBalance(Node* &root, bool& shorter) {
-        
-    };
+        if (root->balance == RH) {
+            root->balance = EH;
+        }
+        else if (root->balance == EH) {
+            root->balance = LH;
+            shorter = false;
+        }
+        else {
+            Node* leftTree = root->left;
+            if (leftTree->balance == RH) {
+                Node* rightTree = leftTree->right;
+                if (rightTree->balance == RH) {
+                    leftTree->balance = LH;
+                    root->balance = EH;
+                }
+                else if (rightTree->balance == EH) {
+                    leftTree->balance = EH;
+                    root->balance = EH;
+                }
+                else {
+                    leftTree->balance = EH;
+                    root->balance = RH;
+                }
+                rightTree->balance = EH;
+                rotateLeft(root->left);
+                rotateRight(root);
+                shorter = false;
+            }
+            else {
+                if (leftTree->balance == EH) {
+                    leftTree->balance = RH;
+                    root->balance = LH;
+                    shorter = false;
+                }
+                else {
+                    root->balance = EH;
+                    leftTree->balance = EH;
+                }
+                rotateRight(root);
+            }
+        }
+        return;
+    }
 
     void deleteRightBalance(Node*& root, bool& shorter) {
-        
-    };
+        if (root->balance == LH) {
+            root->balance = EH;
+        }
+        else if (root->balance == EH) {
+            root->balance = RH;
+            shorter = false;
+        }
+        else {
+            Node* rightTree = root->right;
+            if (rightTree->balance == LH) {
+                Node* leftTree = rightTree->left;
+                if (leftTree->balance == LH) {
+                    rightTree->balance = RH;
+                    root->balance = EH;
+                }
+                else if (leftTree->balance == EH) {
+                    rightTree->balance = EH;
+                    root->balance = EH;
+                }
+                else {
+                    rightTree->balance = EH;
+                    root->balance = LH;
+                }
+                leftTree->balance = EH;
+                rotateRight(root->right);
+                rotateLeft(root);
+                shorter = false;
+            }
+            else {
+                if (rightTree->balance == EH) {
+                    rightTree->balance = LH;
+                    root->balance = RH;
+                    shorter = false;
+                }
+                else {
+                    root->balance = EH;
+                    rightTree->balance = EH;
+                }
+                rotateRight(root);
+            }
+        }
+        return;
+    }
 
 public:
     AVLTree() {
@@ -189,10 +305,12 @@ public:
 
     //more func
 
+    //error is not included
     void insertNode(string key, float value, int type) {
         Node* insertPtr = new Node(key, value, type);
         bool taller = false;
         insertNodeRec(this->root, insertPtr, taller);
+        this->count++;
         return;
     }
 
@@ -200,6 +318,9 @@ public:
         bool success = false;
         bool shorter = false;
         deleteNodeRec(this->root, delKey, shorter, success);
+        if (success) {
+            this->count--;
+        }
         return;
     };
 
@@ -235,6 +356,12 @@ public:
             this->type = 0;
             this->left = this->right = NULL;
             this->balance = EH;
+        }
+
+        void operator = (Node* exch) {
+            this->key = exch->key;
+            this->value = exch->value;
+            this->type = exch->type;
         }
     };
 };

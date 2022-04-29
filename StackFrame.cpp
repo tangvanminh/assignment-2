@@ -30,7 +30,6 @@ public:
 protected:
     Node* root;
     int count;
-    bool taller;
 
 private:
     void rotateRight(Node*& root) {
@@ -49,37 +48,6 @@ private:
         return;
     }
 
-    void leftBalance(Node*& root, bool& taller) {
-        Node* leftTree = root->left;
-        if (leftTree->balance == LH) {
-            root->balance = EH;
-            leftTree->balance = EH;
-            rotateRight(root);
-            taller = false;
-            return;
-        }
-        else {
-            Node* rightTree = leftTree->right;
-            if (rightTree->balance == LH) {
-                root->balance = RH;
-                leftTree->balance = EH;
-            }
-            else if (rightTree->balance == EH) {
-                root->balance = EH;
-                leftTree->balance = EH;
-            }
-            else {
-                root->balance = EH;
-                leftTree->balance = LH;
-            }
-            rightTree->balance = EH;
-            rotateLeft(root->left);
-            rotateRight(root);
-            taller = false;
-            return;
-        }
-    }
-
     //a>b?
     bool ALargerThanB(string a, string b) {
         int i = 0, j = 0;
@@ -91,7 +59,6 @@ private:
         if (i == a.size())return false;
         return true;
     }
-
 
     void insertNodeRec(Node*& root, Node* insertPtr, bool& taller) {
         if (root == NULL) {
@@ -135,6 +102,49 @@ private:
         return;
     }
 
+    void deleteNodeRec(Node* &root, string delKey, bool& shorter, bool&success) {
+        if (root == NULL) {
+            success = false;
+            shorter = false;
+            return;
+        }
+        if (ALargerThanB(root->key, delKey)) {
+
+        }
+        return;
+    }
+
+    void leftBalance(Node*& root, bool& taller) {
+        Node* leftTree = root->left;
+        if (leftTree->balance == LH) {
+            root->balance = EH;
+            leftTree->balance = EH;
+            rotateRight(root);
+            taller = false;
+            return;
+        }
+        else {
+            Node* rightTree = leftTree->right;
+            if (rightTree->balance == LH) {
+                root->balance = RH;
+                leftTree->balance = EH;
+            }
+            else if (rightTree->balance == EH) {
+                root->balance = EH;
+                leftTree->balance = EH;
+            }
+            else {
+                root->balance = EH;
+                leftTree->balance = LH;
+            }
+            rightTree->balance = EH;
+            rotateLeft(root->left);
+            rotateRight(root);
+            taller = false;
+            return;
+        }
+    }
+
     void rightBalance(Node*& root, bool& taller) {
         Node* rightTree = root->right;
         if (rightTree->balance == RH) {
@@ -163,10 +173,17 @@ private:
         return;
     }
 
+    void deleteLeftBalance(Node* &root, bool& shorter) {
+        
+    };
+
+    void deleteRightBalance(Node*& root, bool& shorter) {
+        
+    };
+
 public:
     AVLTree() {
         this->root = NULL;
-        this->taller = false;
         count = 0;
     }
 
@@ -174,10 +191,17 @@ public:
 
     void insertNode(string key, float value, int type) {
         Node* insertPtr = new Node(key, value, type);
-        insertNodeRec(this->root, insertPtr, this->taller);
+        bool taller = false;
+        insertNodeRec(this->root, insertPtr, taller);
         return;
     }
 
+    void deleteNode(string delKey) {
+        bool success = false;
+        bool shorter = false;
+        deleteNodeRec(this->root, delKey, shorter, success);
+        return;
+    };
 
 public:
     //class Node

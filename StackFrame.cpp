@@ -5,9 +5,10 @@
 #include "constants.h"
 using namespace std;
 
+//forward declaration
 
-
-
+class AVLTree;
+class Stack;
 
 /*
 error enum
@@ -297,6 +298,19 @@ private:
         return;
     }
 
+    Node* takeNodeRec(Node* root, string key) {
+        if (root == NULL) return NULL;
+        if (root->key == key) {
+            return root;
+        }
+        else if (ALargerThanB(root->key, key)) {
+            return takeNodeRec(root->left, key);
+        }
+        else {
+            return takeNodeRec(root->right, key);
+        }
+    }
+
 public:
     AVLTree() {
         this->root = NULL;
@@ -314,6 +328,22 @@ public:
         return;
     }
 
+    void insertNode(Node* insertPtr) {
+        bool taller = false;
+        insertNodeRec(this->root, insertPtr, taller);
+        this->count++;
+        return;
+    }
+
+    void insertNode(Stack::Node* stPtr) {
+        Node* insertPtr = new Node();
+        insertPtr->toAVLNode(stPtr);
+        bool taller = false;
+        insertNodeRec(this->root, insertPtr, taller);
+        this->count++;
+        return;
+    }
+
     void deleteNode(string delKey) {
         bool success = false;
         bool shorter = false;
@@ -323,6 +353,32 @@ public:
         }
         return;
     };
+
+    Node* takeNode(string key) {
+        Node* temp = takeNodeRec(this->root, key);
+        if (temp != NULL) {
+            deleteNode(temp->key);
+        }
+        return temp;
+    }
+
+    void printVal(string key) {
+        Node* print = takeNode(key);
+        if (print == NULL) {
+            cout << "wrong key" << endl;
+        }
+        else if (print->type == 0) {
+            cout << int(print->value) << endl;
+        }
+        else {
+            cout << print->value << endl;
+        }
+        return;
+    }
+
+    int size() {
+        return this->count;
+    }
 
 public:
     //class Node
@@ -334,6 +390,7 @@ public:
         Node* left, * right;
         balance_factor balance;
         friend class AVLTree;
+        friend class Stack::Node;
     public:
         Node() {
             this->type = 0;
@@ -358,10 +415,149 @@ public:
             this->balance = EH;
         }
 
-        void operator = (Node* exch) {
-            this->key = exch->key;
-            this->value = exch->value;
-            this->type = exch->type;
+        void operator = (Node exch) {
+            this->key = exch.key;
+            this->value = exch.value;
+            this->type = exch.type;
+        }
+
+        void toAVLNode(Stack::Node* st) {
+            this->key = st->key;
+            this->value = st->value;
+            this->type = st->type;
+            return;
+        }
+    };
+};
+
+//use linked list to decribe stack
+class Stack {
+public:
+    class Node;
+    
+
+protected:
+    Node* head;
+    int count;
+
+public:
+    Stack(): head(NULL), count(0) {}
+
+    int size() {
+        return this->count;
+    }
+
+    void push(string key, float value, int type) {
+        Node* insertPtr = new Node(key,value,type);
+        if (this->head == NULL) {
+            this->head = insertPtr;
+        }
+        else {
+            insertPtr->next = this->head;
+            head = insertPtr;
+        }
+        this->count++;
+        return;
+    }
+
+    void push(Node* insertPtr) {
+        if (this->head == NULL) {
+            this->head = insertPtr;
+        }
+        else {
+            insertPtr->next = this->head;
+            head = insertPtr;
+        }
+        this->count++;
+        return;
+    }
+
+    void push(AVLTree::Node* avlPtr) {
+        Node* insertPtr = new Node();
+        insertPtr->toStackNode(avlPtr);
+        if (this->head == NULL) {
+            this->head = insertPtr;
+        }
+        else {
+            insertPtr->next = this->head;
+            head = insertPtr;
+        }
+        this->count++;
+        return;
+    }
+
+    Node* top() {
+        Node* temp = new Node();
+        *temp = *(this->head);
+        return temp;
+    }
+
+    void printTop() {
+        Node* print = this->top();
+        if (print == NULL) {
+            cout << "stack empty" << endl;
+        }
+        else if (print->type == 0) {
+            cout << int(print->value) << endl;
+        }
+        else {
+            cout << print->value << endl;
+        }
+        return;
+    }
+
+    void pop() {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+        this->count--;
+        return;
+    }
+
+
+    
+public:
+    class Node {
+        string key;
+        float value;
+        int type;
+        Node* next;
+        friend class Stack;
+        friend class AVLTree::Node;
+    public:
+        Node() {
+            this->key = "";
+            this->value = 0;
+            this->type = 0;
+            this->next = NULL;
+        }
+
+        Node(string key, float value, int type, Node* next = NULL) {
+            this->key = key;
+            this->value = value;
+            this->type = type;
+            this->next = next;
+        }
+
+        ~Node() {
+            this->next = NULL;
+            this->key = "";
+            this->type = 0;
+            this->value = 0;
+        }
+
+        void operator = (Node node) {
+            this->key = node.key;
+            this->value = node.value;
+            this->type = node.type;
+            return;
+        }
+
+        void toStackNode (const AVLTree::Node* avl) {
+            this->key = avl->key;
+            this->value = avl->value;
+            this->type = avl->type;
+            return;
         }
     };
 };
@@ -371,8 +567,8 @@ StackFrame::StackFrame() : opStackMaxSize(OPERAND_STACK_MAX_SIZE), localVarSpace
 void StackFrame::run(string filename) {
     string mode;  // name of syntax
     string data;  // temporary string type before convert into suitable type
-    int idata;    // integer variable
-    float fdata;  // float variable
+    int idata = 0;    // integer variable
+    float fdata = 0;  // float variable
     int line = 1; // current line (start at 1)
     int err = 0;  // type of error
 
@@ -381,4 +577,7 @@ void StackFrame::run(string filename) {
     readfile.open(filename, ios::in); // open file in read mode
 
     readfile.close();
+
+    Stack::Node* a = new Stack::Node();
+    
 }

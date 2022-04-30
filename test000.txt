@@ -1,2 +1,4 @@
-iconst 3
+iconst 5
+
+irem
 top

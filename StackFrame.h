@@ -21,9 +21,7 @@ public:
     */
     void run(std::string filename);
 
-    AVLTree a() {
-
-    };
+    
 };
 
 #endif // !__STACK_FRAME_H__

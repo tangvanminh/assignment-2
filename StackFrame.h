@@ -603,6 +603,32 @@ public:
 
     void iRem(int& err);
 
+    void iNeg(int& err);
+
+    void fNeg(int& err);
+
+    void iAnd(int& err);
+
+    void iOr(int& err);
+
+    void iEq(int& err);
+
+    void fEq(int& err);
+
+    void inEq(int& err);
+    
+    void fnEq(int& err);
+
+    void iLt(int& err);
+
+    void fLt(int& err);
+
+    void iGt(int& err);
+
+    void fGt(int& err);
+
+    void iBnot(int& err);
+
     //Load and store instruction
     void iConst(int val, int& err);
 

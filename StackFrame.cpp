@@ -371,7 +371,258 @@ void StackFrame::iRem(int& err) {
     return;
 }
 
+void StackFrame::iNeg(int& err) {
+    if (opStack.size() == 0) {
+        err = smt;
+        return;
+    }
+    float value = opStack.Top()->Value();
+    int type = opStack.Top()->Type();
+    opStack.pop();
+    if (type == 1) {
+        err = tmm;
+        return;
+    }
+    opStack.push(-value, type);
+    return;
+}
 
+void StackFrame::fNeg(int& err) {
+    if (opStack.size() == 0) {
+        err = smt;
+        return;
+    }
+    float value = opStack.Top()->Value();
+    int type = opStack.Top()->Type();
+    opStack.pop();
+    if (value != 0) value = -value;
+    opStack.push(value, 1);
+    return;
+}
+
+void StackFrame::iAnd(int& err) {
+    if (opStack.size() < 2) {
+        err = smt;
+        return;
+    }
+    int type1, type2;
+    float valu1, valu2;
+    type1 = opStack.Top()->Type();
+    valu1 = opStack.Top()->Value();
+    opStack.pop();
+    type2 = opStack.Top()->Type();
+    valu2 = opStack.Top()->Value();
+    opStack.pop();
+    if (type1 == 1 || type2 == 1) {
+        err = tmm;
+        return;
+    }
+
+    opStack.push(int(int(valu1) & int(valu2)), type1);
+    return;
+}
+
+void StackFrame::iOr(int& err) {
+    if (opStack.size() < 2) {
+        err = smt;
+        return;
+    }
+    int type1, type2;
+    float valu1, valu2;
+    type1 = opStack.Top()->Type();
+    valu1 = opStack.Top()->Value();
+    opStack.pop();
+    type2 = opStack.Top()->Type();
+    valu2 = opStack.Top()->Value();
+    opStack.pop();
+    if (type1 == 1 || type2 == 1) {
+        err = tmm;
+        return;
+    }
+
+    opStack.push(int(int(valu1) | int(valu2)), type1);
+    return;
+}
+
+void StackFrame::iEq(int& err) {
+    if (opStack.size() < 2) {
+        err = smt;
+        return;
+    }
+    int type1, type2;
+    float valu1, valu2;
+    type1 = opStack.Top()->Type();
+    valu1 = opStack.Top()->Value();
+    opStack.pop();
+    type2 = opStack.Top()->Type();
+    valu2 = opStack.Top()->Value();
+    opStack.pop();
+    if (type1 == 1 || type2 == 1) {
+        err = tmm;
+        return;
+    }
+
+    opStack.push(int(int(valu1) == int(valu2)), type1);
+    return;
+}
+
+void StackFrame::fEq(int& err) {
+    if (opStack.size() < 2) {
+        err = smt;
+        return;
+    }
+    int type1, type2;
+    float valu1, valu2;
+    type1 = opStack.Top()->Type();
+    valu1 = opStack.Top()->Value();
+    opStack.pop();
+    type2 = opStack.Top()->Type();
+    valu2 = opStack.Top()->Value();
+    opStack.pop();
+    
+
+    opStack.push(int(int(valu1) == int(valu2)), 1);
+    return;
+}
+
+void StackFrame::inEq(int& err) {
+    if (opStack.size() < 2) {
+        err = smt;
+        return;
+    }
+    int type1, type2;
+    float valu1, valu2;
+    type1 = opStack.Top()->Type();
+    valu1 = opStack.Top()->Value();
+    opStack.pop();
+    type2 = opStack.Top()->Type();
+    valu2 = opStack.Top()->Value();
+    opStack.pop();
+    if (type1 == 1 || type2 == 1) {
+        err = tmm;
+        return;
+    }
+
+    opStack.push(int(int(valu1) != int(valu2)), type1);
+    return;
+}
+
+void StackFrame::fnEq(int& err) {
+    if (opStack.size() < 2) {
+        err = smt;
+        return;
+    }
+    int type1, type2;
+    float valu1, valu2;
+    type1 = opStack.Top()->Type();
+    valu1 = opStack.Top()->Value();
+    opStack.pop();
+    type2 = opStack.Top()->Type();
+    valu2 = opStack.Top()->Value();
+    opStack.pop();
+
+
+    opStack.push(int(int(valu1) != int(valu2)), 1);
+    return;
+}
+
+void StackFrame::iLt(int& err) {
+    if (opStack.size() < 2) {
+        err = smt;
+        return;
+    }
+    int type1, type2;
+    float valu1, valu2;
+    type1 = opStack.Top()->Type();
+    valu1 = opStack.Top()->Value();
+    opStack.pop();
+    type2 = opStack.Top()->Type();
+    valu2 = opStack.Top()->Value();
+    opStack.pop();
+    if (type1 == 1 || type2 == 1) {
+        err = tmm;
+        return;
+    }
+
+    opStack.push(int(int(valu2) < int(valu1)), type1);
+    return;
+}
+
+void StackFrame::fLt(int& err) {
+    if (opStack.size() < 2) {
+        err = smt;
+        return;
+    }
+    int type1, type2;
+    float valu1, valu2;
+    type1 = opStack.Top()->Type();
+    valu1 = opStack.Top()->Value();
+    opStack.pop();
+    type2 = opStack.Top()->Type();
+    valu2 = opStack.Top()->Value();
+    opStack.pop();
+
+
+    opStack.push(int(int(valu2) < int(valu1)), 1);
+    return;
+}
+
+void StackFrame::iGt(int& err) {
+    if (opStack.size() < 2) {
+        err = smt;
+        return;
+    }
+    int type1, type2;
+    float valu1, valu2;
+    type1 = opStack.Top()->Type();
+    valu1 = opStack.Top()->Value();
+    opStack.pop();
+    type2 = opStack.Top()->Type();
+    valu2 = opStack.Top()->Value();
+    opStack.pop();
+    if (type1 == 1 || type2 == 1) {
+        err = tmm;
+        return;
+    }
+
+    opStack.push(int(int(valu2) > int(valu1)), type1);
+    return;
+}
+
+void StackFrame::fGt(int& err) {
+    if (opStack.size() < 2) {
+        err = smt;
+        return;
+    }
+    int type1, type2;
+    float valu1, valu2;
+    type1 = opStack.Top()->Type();
+    valu1 = opStack.Top()->Value();
+    opStack.pop();
+    type2 = opStack.Top()->Type();
+    valu2 = opStack.Top()->Value();
+    opStack.pop();
+
+
+    opStack.push(int(int(valu2) > int(valu1)), 1);
+    return;
+}
+
+void StackFrame::iBnot(int& err) {
+    if (opStack.size() == 0) {
+        err = smt;
+        return;
+    }
+    float value = opStack.Top()->Value();
+    int type = opStack.Top()->Type();
+    opStack.pop();
+    if (type == 1) {
+        err = tmm;
+        return;
+    }
+    opStack.push(int(value==0), type);
+    return;
+}
 
 void StackFrame::iConst(int val, int& err) {
     if (opStack.size() == opStackMaxSize/2) {
@@ -582,8 +833,58 @@ void StackFrame::run(string filename) {
             iRem(err);
             break;
         }
-
-
+        case ineg: {
+            iNeg(err);
+            break;
+        }
+        case fneg: {
+            fNeg(err);
+            break;
+        }
+        case iand: {
+            iAnd(err);
+            break;
+        }
+        case ior: {
+            iOr(err);
+            break;
+        }
+        case ieq: {
+            iEq(err);
+            break;
+        }
+        case feq: {
+            fEq(err);
+            break;
+        }
+        case ineq: {
+            inEq(err);
+            break;
+        }
+        case fneq: {
+            fnEq(err);
+            break;
+        }
+        case ilt: {
+            iLt(err);
+            break;
+        }
+        case flt: {
+            fLt(err);
+            break;
+        }
+        case igt: {
+            iGt(err);
+            break;
+        }
+        case fgt: {
+            fGt(err);
+            break;
+        }
+        case ibnot: {
+            iBnot(err);
+            break;
+        }
         case iconst: {
             readfile >> data;
 
@@ -665,6 +966,6 @@ void StackFrame::run(string filename) {
     }
 
     readfile.close();
-
+    return;
     
 }

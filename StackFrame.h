@@ -35,7 +35,7 @@ private:
 
     //a>b?
     bool ALargerThanB(std::string a, std::string b) {
-        int i = 0, j = 0;
+        unsigned int i = 0, j = 0;
         while (i < a.size() && j < b.size()) {
             if (a[i] < b[j]) return false;
             if (a[i] > b[j]) return true;
@@ -422,10 +422,7 @@ public:
         }
 
         void printNode() {
-            if (this == NULL) {
-                printf("wrong key \n");
-            }
-            else if (this->type == 0) {
+            if (this->type == 0) {
                 printf("%d\n", int(this->value));
             }
             else {

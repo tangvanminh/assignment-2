@@ -210,12 +210,9 @@ void StackFrame::fAdd(int& err) {
         err = smt;
         return;
     }
-    int type1, type2;
     float valu1, valu2;
-    type1 = opStack.Top()->Type();
     valu1 = opStack.Top()->Value();
     opStack.pop();
-    type2 = opStack.Top()->Type();
     valu2 = opStack.Top()->Value();
     opStack.pop();
     opStack.push(valu1 + valu2, 1);
@@ -249,12 +246,9 @@ void StackFrame::fSub(int& err) {
         err = smt;
         return;
     }
-    int type1, type2;
     float valu1, valu2;
-    type1 = opStack.Top()->Type();
     valu1 = opStack.Top()->Value();
     opStack.pop();
-    type2 = opStack.Top()->Type();
     valu2 = opStack.Top()->Value();
     opStack.pop();
     opStack.push(valu2 - valu1, 1);
@@ -288,12 +282,9 @@ void StackFrame::fMul(int& err) {
         err = smt;
         return;
     }
-    int type1, type2;
     float valu1, valu2;
-    type1 = opStack.Top()->Type();
     valu1 = opStack.Top()->Value();
     opStack.pop();
-    type2 = opStack.Top()->Type();
     valu2 = opStack.Top()->Value();
     opStack.pop();
     opStack.push(valu1 * valu2, 1);
@@ -330,19 +321,16 @@ void StackFrame::fDiv(int& err) {
         err = smt;
         return;
     }
-    int type1, type2;
     float valu1, valu2;
-    type1 = opStack.Top()->Type();
     valu1 = opStack.Top()->Value();
     opStack.pop();
-    type2 = opStack.Top()->Type();
     valu2 = opStack.Top()->Value();
     opStack.pop();
     if (valu1 == 0) {
         err = dbz;
         return;
     }
-    opStack.push(valu2 / valu1, type1);
+    opStack.push(valu2 / valu1, 1);
     return;
 }
 
@@ -393,7 +381,6 @@ void StackFrame::fNeg(int& err) {
         return;
     }
     float value = opStack.Top()->Value();
-    int type = opStack.Top()->Type();
     opStack.pop();
     if (value != 0) value = -value;
     opStack.push(value, 1);
@@ -471,12 +458,9 @@ void StackFrame::fEq(int& err) {
         err = smt;
         return;
     }
-    int type1, type2;
     float valu1, valu2;
-    type1 = opStack.Top()->Type();
     valu1 = opStack.Top()->Value();
     opStack.pop();
-    type2 = opStack.Top()->Type();
     valu2 = opStack.Top()->Value();
     opStack.pop();
     
@@ -512,12 +496,9 @@ void StackFrame::fnEq(int& err) {
         err = smt;
         return;
     }
-    int type1, type2;
     float valu1, valu2;
-    type1 = opStack.Top()->Type();
     valu1 = opStack.Top()->Value();
     opStack.pop();
-    type2 = opStack.Top()->Type();
     valu2 = opStack.Top()->Value();
     opStack.pop();
 
@@ -553,12 +534,9 @@ void StackFrame::fLt(int& err) {
         err = smt;
         return;
     }
-    int type1, type2;
     float valu1, valu2;
-    type1 = opStack.Top()->Type();
     valu1 = opStack.Top()->Value();
     opStack.pop();
-    type2 = opStack.Top()->Type();
     valu2 = opStack.Top()->Value();
     opStack.pop();
 
@@ -594,12 +572,9 @@ void StackFrame::fGt(int& err) {
         err = smt;
         return;
     }
-    int type1, type2;
     float valu1, valu2;
-    type1 = opStack.Top()->Type();
     valu1 = opStack.Top()->Value();
     opStack.pop();
-    type2 = opStack.Top()->Type();
     valu2 = opStack.Top()->Value();
     opStack.pop();
 
